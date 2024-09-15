@@ -64,10 +64,13 @@ def stations():
 # Route for temperature observations for the most active station
 @app.route("/api/v1.0/tobs")
 def tobs():
-    most_active_station_id = session.query(Measurement.station).group_by(Measurement.station).order_by(func.count(Measurement.station).desc()).first()[0]
+    most_active_station_id = "USC00519281"
     most_recent_date = session.query(Measurement.date).order_by(Measurement.date.desc()).first()[0]
     one_year_ago = dt.datetime.strptime(most_recent_date, '%Y-%m-%d') - dt.timedelta(days=365)
-    tobs_data = session.query(Measurement.tobs).filter(Measurement.station == most_active_station_id, Measurement.date >= one_year_ago).all()
+    tobs_data = session.query(Measurement.tobs).filter(
+        Measurement.station == most_active_station_id,
+        Measurement.date >= one_year_ago
+    ).all()
     tobs_list = list(np.ravel(tobs_data))
     return jsonify(tobs_list)
 
