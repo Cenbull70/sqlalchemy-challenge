@@ -74,14 +74,14 @@ def tobs():
     tobs_list = list(np.ravel(tobs_data))
     return jsonify(tobs_list)
 
-# Route for temperature statistics for a single start date
+# Route for temperature observations for a specific date
 @app.route("/api/v1.0/<start_date>")
 def start_date(start_date):
     """Return a list of min, avg, and max tobs for a start date"""
     results = session.query(func.min(Measurement.tobs), func.avg(Measurement.tobs), func.max(Measurement.tobs)).\
                 filter(Measurement.date >= start_date).all()
 
-    # Create a dictionary from the row data and return it
+
     start_date_tobs = []
     for min_temp, avg_temp, max_temp in results:
         start_date_tobs_dict = {
@@ -93,14 +93,14 @@ def start_date(start_date):
 
     return jsonify(start_date_tobs)
 
-# Route for temperature statistics between start and end dates
+# Route for temperature observations for a time frame
 @app.route("/api/v1.0/<start_date>/<end_date>")
 def start_end_date(start_date, end_date):
     """Return a list of min, avg and max tobs for start and end dates"""
     results = session.query(func.min(Measurement.tobs), func.avg(Measurement.tobs), func.max(Measurement.tobs)).\
                 filter(Measurement.date >= start_date).filter(Measurement.date <= end_date).all()
 
-    # Create a dictionary from the row data and return it
+  
     start_end_tobs = []
     for min_temp, avg_temp, max_temp in results:
         start_end_tobs_dict = {
